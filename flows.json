@@ -1,0 +1,194 @@
+[
+    {
+        "id": "8475ab9.3d26058",
+        "type": "tab",
+        "label": "Web App Socket Router",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "6ad7c930.1a06b8",
+        "type": "ui_base",
+        "theme": {
+            "name": "theme-dark",
+            "lightTheme": {
+                "default": "#0094CE",
+                "baseColor": "#0094CE",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "darkTheme": {
+                "default": "#097479",
+                "baseColor": "#097479",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "customTheme": {
+                "name": "Untitled Theme 1",
+                "default": "#4B7930",
+                "baseColor": "#4B7930",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+            },
+            "themeState": {
+                "base-color": {
+                    "default": "#097479",
+                    "value": "#097479",
+                    "edited": false
+                },
+                "page-titlebar-backgroundColor": {
+                    "value": "#097479",
+                    "edited": false
+                },
+                "page-backgroundColor": {
+                    "value": "#111111",
+                    "edited": false
+                },
+                "page-sidebar-backgroundColor": {
+                    "value": "#000000",
+                    "edited": false
+                },
+                "group-textColor": {
+                    "value": "#0eb8c0",
+                    "edited": false
+                },
+                "group-borderColor": {
+                    "value": "#555555",
+                    "edited": false
+                },
+                "group-backgroundColor": {
+                    "value": "#333333",
+                    "edited": false
+                },
+                "widget-textColor": {
+                    "value": "#eeeeee",
+                    "edited": false
+                },
+                "widget-backgroundColor": {
+                    "value": "#097479",
+                    "edited": false
+                },
+                "widget-borderColor": {
+                    "value": "#333333",
+                    "edited": false
+                },
+                "base-font": {
+                    "value": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+                }
+            },
+            "angularTheme": {
+                "primary": "indigo",
+                "accents": "blue",
+                "warn": "red",
+                "background": "grey"
+            }
+        },
+        "site": {
+            "name": "Chill Detector",
+            "hideToolbar": "false",
+            "allowSwipe": "false",
+            "dateFormat": "DD/MM/YYYY",
+            "sizes": {
+                "sx": 48,
+                "sy": 48,
+                "gx": 6,
+                "gy": 6,
+                "cx": 6,
+                "cy": 6,
+                "px": 0,
+                "py": 0
+            }
+        }
+    },
+    {
+        "id": "84d80994.260508",
+        "type": "mqtt-broker",
+        "name": "MQTT Broker",
+        "broker": "$(MQTTSERVERIP)",
+        "port": "1883",
+        "clientid": "$(MQTTCLIENTID)",
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": ""
+    },
+    {
+        "id": "5ff9b161.b23a4",
+        "type": "mqtt in",
+        "z": "8475ab9.3d26058",
+        "name": "Subscribe Webcam",
+        "topic": "blinky-lite-v2/blinky-webcam/+/image",
+        "qos": "0",
+        "datatype": "auto",
+        "broker": "84d80994.260508",
+        "nl": false,
+        "rap": false,
+        "x": 150,
+        "y": 40,
+        "wires": [
+            [
+                "9053c41d.fd4868"
+            ]
+        ]
+    },
+    {
+        "id": "9053c41d.fd4868",
+        "type": "function",
+        "z": "8475ab9.3d26058",
+        "name": "Split MQTT topic",
+        "func": "var mqttArray = msg.topic.split('/');\nvar device = \n{\n    project     : mqttArray[0],\n    deviceType  : mqttArray[1],\n    name        : mqttArray[2],\n    prop        : mqttArray[3],\n};\nmsg['filename'] = 'html-static/img/blinky-webcam/' + device.deviceType + '-' + device.name + '.jpg';\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 150,
+        "y": 100,
+        "wires": [
+            [
+                "bfd2291c.645028"
+            ]
+        ]
+    },
+    {
+        "id": "a73244ae.eb9828",
+        "type": "file",
+        "z": "8475ab9.3d26058",
+        "name": "",
+        "filename": "",
+        "appendNewline": false,
+        "createDir": false,
+        "overwriteFile": "true",
+        "encoding": "none",
+        "x": 110,
+        "y": 240,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "bfd2291c.645028",
+        "type": "base64",
+        "z": "8475ab9.3d26058",
+        "name": "",
+        "action": "",
+        "property": "payload",
+        "x": 120,
+        "y": 160,
+        "wires": [
+            [
+                "a73244ae.eb9828"
+            ]
+        ]
+    }
+]
